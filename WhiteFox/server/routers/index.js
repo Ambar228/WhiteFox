@@ -8,6 +8,4 @@ router.use('/user', userRouter)
 router.use('/type', typeRouter)
 router.use('/dish', dishRouter)
 
-
-
 module.exports = router

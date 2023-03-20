@@ -1,6 +1,7 @@
 class TypeController {
 
     async creat(req, res) {
+        const {name} = req.body
 
     }
 
