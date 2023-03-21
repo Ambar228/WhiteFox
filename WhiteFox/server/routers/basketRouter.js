@@ -3,7 +3,7 @@ const router = new Router()
 const basketController = require('../controllers/basketController')
 
 router.post('/', basketController.create)
+router.delete('/delete', basketController.deleteBasket)
 router.get('/', basketController.get)
-router.delete('/', basketController.delete)
 
 module.exports = router

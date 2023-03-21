@@ -12,6 +12,18 @@ const Basket = sequelize.define('basket', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
 
+const OrderDish = sequelize.define('order_dish', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+})
+
+const Order = sequelize.define('order', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    phone: {type: DataTypes.STRING,  allowNull: false},
+    postcode: {type: DataTypes.STRING, allowNull: false},
+    addressee: {type: DataTypes.STRING, allowNull: false},
+    status:{type: DataTypes.INTEGER, defaultValue: 1}
+})
+
 const Basket_dish = sequelize.define('basket_dish', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
@@ -22,7 +34,7 @@ const Dish = sequelize.define('dish', {
     compound: {type: DataTypes.STRING, allowNull: false},
     price: {type: DataTypes.INTEGER, allowNull: false},
     rating: {type: DataTypes.INTEGER, defaultValue: 0},
-    img: {type: DataTypes.STRING, allowNull: false},
+    img: {type: DataTypes.STRING, allowNull: false, allowNull: true},
 })
 
 const Type = sequelize.define('type', {
@@ -53,11 +65,27 @@ Dish.belongsTo(Type)
 Dish.hasMany(Rating)
 Rating.belongsTo(Dish)
 
+User.hasMany(Order);
+Order.belongsTo(User);
+
+Order.hasMany(OrderDish);
+OrderDish.belongsTo(Order);
+
+Order.hasOne(User);
+User.belongsTo(Order);
+
+Dish.hasMany(OrderDish);
+OrderDish.belongsTo(Dish);
+
+
+
 module.exports = {
     User,
     Basket,
     Basket_dish,
     Dish,
     Type,
-    Rating
+    Rating,
+    Order,
+    OrderDish
 }

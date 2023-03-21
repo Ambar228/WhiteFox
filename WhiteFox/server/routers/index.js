@@ -3,9 +3,13 @@ const router = new Router()
 const dishRouter = require('./dishRouter')
 const typeRouter = require('./typeRouter')
 const userRouter = require('./userRouter')
+const basketRouter = require('./basketRouter')
+const orderRouter = require('./orderRouter')
 
 router.use('/user', userRouter)
 router.use('/type', typeRouter)
 router.use('/dish', dishRouter)
+router.use('/basket', basketRouter)
+router.use('/order', orderRouter)
 
 module.exports = router
