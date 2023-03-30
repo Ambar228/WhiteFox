@@ -14,9 +14,17 @@ class BasketController {
 
 
     async getBasketUser(req, res) {
+        let basketArrayId = []
+        const products = []
         const {id} = req.user
-        const basket = await Basket_Dish.findOne({where: {basketId: id}})
-        return res.json(basket)
+        const basket = await Basket_Dish.findAll({where: {basketId: id}})
+        basket.forEach(b => basketArrayId.push(b.dishId))
+        for (let i = 0; i < basketArrayId.length; i++) {
+            let id = basketArrayId[i]
+            const product = await Dish.findOne({ where : {id: id}})
+            products.push(product)
+        }
+        return res.json(products)
     }
 
     async deleteBasket(req, res) {

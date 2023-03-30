@@ -3,7 +3,6 @@ import {Button, Card, Container, Form, Row} from "react-bootstrap";
 import {BrowserRouter, NavLink} from "react-router-dom";
 import {LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE} from "../utils/consts";
 import {Routes, useLocation, useNavigate} from "react-router-dom-v5-compat";
-import {login, registration} from "../http/userAPI";
 import {User} from "../models/User";
 import {$host} from "../http";
 import jwt_decode from "jwt-decode";
@@ -34,21 +33,25 @@ const Authorization = (props: AboutProps) => {
     const isLogin = location.pathname === LOGIN_ROUTE
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [token, setToken] = useState('')
 
     const click = async () => {
         try {
 
             if (isLogin) {
-                $host.post('api/user/login', {email, password}).then((response) =>user.changeUserType(jwt_decode(response.data.token)));
+                await $host.post('api/user/login', {email, password}).then((response) => setToken(response.data.token));
+                localStorage.setItem('token', token)
+                user.changeUserType(jwt_decode(token))
                 user.changeIsAuthType(true);
             } else {
-                await $host.post('api/user/registration', {email, password, role: 'USER'}).then((response) => user.changeUserType(jwt_decode(response.data.token)));
+                await $host.post('api/user/registration', {email, password, role: 'USER'}).then((response) =>  setToken(response.data.token));
+                localStorage.setItem('token', token)
+                user.changeUserType(jwt_decode(token))
                 user.changeIsAuthType(true);
             }
             navigate(SHOP_ROUTE)
         }
         catch (e: any) {
-            alert(e.response.data.message)
         }
     }
     return (
