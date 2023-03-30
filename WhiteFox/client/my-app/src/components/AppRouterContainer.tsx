@@ -3,7 +3,11 @@ import {Dispatch} from "redux";
 import {AppStateType} from "../redux/store";
 import {AboutPropsDispatch, AboutPropsState} from "./AppRouter";
 import AppRouter from "./AppRouter";
-import NavBar from "./NavBar";
+import {
+    changeIsAuthType,
+    changeUserType, UserPageGlobalActionType
+} from "../redux/reducers/UserReducer";
+import {User} from "../models/User";
 
 let mapStateToProps = (state: AppStateType) : AboutPropsState => {
     return {
@@ -11,9 +15,14 @@ let mapStateToProps = (state: AppStateType) : AboutPropsState => {
         user: state.userReducer.user
     }
 }
-let mapDispatchToProps  = (dispatch : Dispatch<any>) : AboutPropsDispatch => {
+let mapDispatchToProps  = (dispatch : Dispatch<UserPageGlobalActionType>) : AboutPropsDispatch => {
     return {
-
+        changeIsAuthType(isAuth: boolean): void {
+            dispatch(changeIsAuthType(isAuth))
+        },
+        changeUserType: (user: User) => {
+            dispatch(changeUserType(user))
+        }
     }
 }
 

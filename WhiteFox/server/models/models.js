@@ -10,22 +10,25 @@ const User = sequelize.define('user', {
 
 const Basket = sequelize.define('basket', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    price: {type: DataTypes.DECIMAL, defaultValue: 0},
+    numberOfDish: {type: DataTypes.INTEGER, defaultValue: 0}
 })
 
-const OrderDish = sequelize.define('order_dish', {
+const Basket_Dish = sequelize.define('basket_dish', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+})
+
+const Order_Dish = sequelize.define('order_dish', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
 })
 
 const Order = sequelize.define('order', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     phone: {type: DataTypes.STRING,  allowNull: false},
-    postcode: {type: DataTypes.STRING, allowNull: false},
     addressee: {type: DataTypes.STRING, allowNull: false},
-    status:{type: DataTypes.INTEGER, defaultValue: 1}
-})
-
-const Basket_dish = sequelize.define('basket_dish', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    status:{type: DataTypes.STRING, defaultValue: "Не принят"},
+    price: {type: DataTypes.DECIMAL, defaultValue: 0},
+    numberOfDish: {type: DataTypes.INTEGER, defaultValue: 0}
 })
 
 const Dish = sequelize.define('dish', {
@@ -33,7 +36,6 @@ const Dish = sequelize.define('dish', {
     name: {type: DataTypes.STRING, unique: true, allowNull: false},
     compound: {type: DataTypes.STRING, allowNull: false},
     price: {type: DataTypes.INTEGER, allowNull: false},
-    rating: {type: DataTypes.INTEGER, defaultValue: 0},
     img: {type: DataTypes.STRING, allowNull: false, allowNull: true},
 })
 
@@ -42,50 +44,39 @@ const Type = sequelize.define('type', {
     name: {type: DataTypes.STRING, unique: true, allowNull: false},
 })
 
-const Rating = sequelize.define('rating', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    rate: {type: DataTypes.INTEGER, allowNull: false}
-})
 
-User.hasOne(Basket)
-Basket.belongsTo(User)
-
-User.hasMany(Rating)
-Rating.belongsTo(User)
-
-Basket.hasMany(Basket_dish)
-Basket_dish.belongsTo(Basket)
-
-Dish.hasMany(Basket_dish)
-Basket_dish.belongsTo(Dish)
-
-Type.hasMany(Dish)
-Dish.belongsTo(Type)
-
-Dish.hasMany(Rating)
-Rating.belongsTo(Dish)
+User.hasOne(Basket);
+Basket.belongsTo(User);
 
 User.hasMany(Order);
 Order.belongsTo(User);
 
-Order.hasMany(OrderDish);
-OrderDish.belongsTo(Order);
+Order.hasMany(Order_Dish);
+Order_Dish.belongsTo(Order);
+
+Basket.hasMany(Basket_Dish);
+Basket_Dish.belongsTo(Basket);
 
 Order.hasOne(User);
 User.belongsTo(Order);
 
-Dish.hasMany(OrderDish);
-OrderDish.belongsTo(Dish);
+Type.hasMany(Dish);
+Dish.belongsTo(Type);
+
+Dish.hasMany(Basket_Dish);
+Basket_Dish.belongsTo(Dish);
+
+Dish.hasMany(Order_Dish);
+Order_Dish.belongsTo(Dish);
 
 
 
 module.exports = {
     User,
     Basket,
-    Basket_dish,
+    Basket_Dish,
     Dish,
     Type,
-    Rating,
     Order,
-    OrderDish
+    Order_Dish,
 }

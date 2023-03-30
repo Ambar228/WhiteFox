@@ -7,11 +7,8 @@ class DishController {
 
     async create(req, res, next) {
         try {
-            const {name, compound, price, typeId} = req.body
-            // const {img} = req.files
-            // let fileName = uuid.v4() + ".jpeg"
-            // img.mv(path.resolve(__dirname, '..', 'static', fileName))
-            const dish = await Dish.create({name, compound, price, typeId})
+            const {name, compound, price, typeId, img} = req.body
+            const dish = await Dish.create({name, compound, price, typeId, img})
             return res.json(dish)
         } catch (e) {
             next(ApiError.badRequest(e.message))
@@ -37,6 +34,8 @@ class DishController {
         const dish = await Dish.findOne({ where: {id}})
         return res.json(dish)
     }
+
+
 
     async deleteOne(req, res) {
         const {id} = req.params

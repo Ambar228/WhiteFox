@@ -1,15 +1,36 @@
 import {InitialStateDishType} from "../../types/InitialStateDishType";
-import {Dish} from "../../models/Dish";
+import {DishObject} from "../../models/DishObject";
 
 export type UserPageGlobalActionType = any
 
-let initialState: InitialStateDishType = {
-    dishes: [{id: 1, name: "zxc", rating: 228, price: 228, compound: "zxcxzc", img: "zxczxc"}]
+export const CHANGE_DISHES = "CHANGE_DISHES"
+
+export type ChangeDishes = {
+    type: typeof CHANGE_DISHES,
+    dishes: Array<DishObject>
 }
-const DishReducer = (state = initialState, action: UserPageGlobalActionType): InitialStateDishType => {
-    return {
-        ...state
+
+let initialState: InitialStateDishType = {
+    dishes: [
+    ],
+}
+const DishReducer = (state = initialState, action: ChangeDishes): InitialStateDishType => {
+    switch (action.type) {
+        case CHANGE_DISHES:
+            return {
+                ...state,
+                dishes: action.dishes
+            }
+
+        default:
+            return {
+                ...state
+            }
     }
 }
+
+export const changeDishes = (dishes: Array<DishObject>): ChangeDishes => ({
+    type: CHANGE_DISHES, dishes: dishes
+})
 
 export default DishReducer;

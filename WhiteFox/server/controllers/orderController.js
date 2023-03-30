@@ -1,24 +1,21 @@
-const {Type, Basket_dish, OrderDish, Dish, Basket, Order} = require("../models/models");
+const {Type, Basket_Dish, OrderDish, Dish, Basket, Order} = require("../models/models");
 
 class OrderController {
 
     async create(req, res, next) {
         let newOrder = {
-            userId: req.body.id ,
-            phone: req.body.phone,
-            postcode: req.body.postcode,
-            addressee: req.body.addressee
+            orderId: req.body.id,
+            dishId: req.body.phone,
         }
 
         const userId = newOrder.userId
 
         const basket = await Basket.findOne({where: {userId: userId}})
         const basketId = parseInt(basket.id);
-        const basketDish = await Basket_dish.findAll({where: {basketId: basketId}})
+        const basketDish = await Basket_Dish.findAll({where: {basketId: basketId}})
 
         if (basketDish.length >= 1)
         {
-            console.log(Order)
             const order = await Order.create(newOrder)
             basketDish.forEach(i =>
                     OrderDish.create({

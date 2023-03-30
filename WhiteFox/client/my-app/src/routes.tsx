@@ -29,10 +29,10 @@ export const authRoutes = [
 ]
 
 export const publicRoutes = [
-    {
-        path: SHOP_ROUTE,
-        Component : Shop
-    },
+    // {
+    //     path: SHOP_ROUTE,
+    //     Component : Shop
+    // },
     {
         path: LOGIN_ROUTE,
         Component : Autharization

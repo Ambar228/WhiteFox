@@ -1,14 +1,56 @@
 import React, {useState} from 'react';
 import {Button, Card, Container, Form, Row} from "react-bootstrap";
 import {BrowserRouter, NavLink} from "react-router-dom";
-import {LOGIN_ROUTE, REGISTRATION_ROUTE} from "../utils/consts";
-import {Routes, useLocation} from "react-router-dom-v5-compat";
+import {LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE} from "../utils/consts";
+import {Routes, useLocation, useNavigate} from "react-router-dom-v5-compat";
+import {login, registration} from "../http/userAPI";
+import {User} from "../models/User";
+import {$host} from "../http";
+import jwt_decode from "jwt-decode";
 
-const Authorization = () => {
+
+export type AboutProps = AboutPropsState & AboutPropsDispatch & AboutPropsOwn
+
+
+export type AboutPropsState = {
+    isAuth: boolean
+    user: User
+}
+
+export type AboutPropsDispatch = {
+    changeUserType: (user: User) => void
+    changeIsAuthType: (isAuth: boolean) => void
+}
+
+export type AboutPropsOwn = {}
+
+const Authorization = (props: AboutProps) => {
+
+    const navigate = useNavigate();
+
+    const user = props
 
     const location = useLocation();
     const isLogin = location.pathname === LOGIN_ROUTE
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
+    const click = async () => {
+        try {
+
+            if (isLogin) {
+                $host.post('api/user/login', {email, password}).then((response) =>user.changeUserType(jwt_decode(response.data.token)));
+                user.changeIsAuthType(true);
+            } else {
+                await $host.post('api/user/registration', {email, password, role: 'USER'}).then((response) => user.changeUserType(jwt_decode(response.data.token)));
+                user.changeIsAuthType(true);
+            }
+            navigate(SHOP_ROUTE)
+        }
+        catch (e: any) {
+            alert(e.response.data.message)
+        }
+    }
     return (
 
         <BrowserRouter>
@@ -18,8 +60,10 @@ const Authorization = () => {
                 <Card style={{width: 600}} className="p-5">
                     <h2 className="m-auto">{isLogin ? 'Авторизация' : 'Регистрация'}</h2>
                     <Form>
-                        <Form.Control className="mt-4" placeholder="Введите ваш email"/>
-                        <Form.Control className="mt-4" placeholder="Введите ваш пароль"/>
+                        <Form.Control className="mt-4" placeholder="Введите ваш email" value={email}
+                                      onChange={e => setEmail(e.target.value)}/>
+                        <Form.Control className="mt-4" placeholder="Введите ваш пароль" value={password}
+                                      onChange={p => setPassword(p.target.value)}/>
                         <Row className="p-lg-3">
                             {isLogin ?
                                 <div>
@@ -37,7 +81,8 @@ const Authorization = () => {
                                     </NavLink>
                                 </div>
                             }
-                            <Button style={{height: '40px', width: '125px', position: 'absolute', right: 50}}>
+                            <Button style={{height: '40px', width: '125px', position: 'absolute', right: 50}}
+                                    onClick={click}>
                                 {isLogin ?
                                     'Войти' :
                                     'Регистрация'

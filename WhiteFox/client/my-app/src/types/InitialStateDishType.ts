@@ -1,5 +1,5 @@
-import {Dish} from "../models/Dish";
+import {DishObject} from "../models/DishObject";
 
 export type InitialStateDishType = {
-    dishes: Array<Dish>
+    dishes: Array<DishObject>
 }
